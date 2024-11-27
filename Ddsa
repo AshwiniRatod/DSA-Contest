@@ -1,0 +1,51 @@
+#include <stdio.h>
+#include <ctype.h>
+#define SIZE 50
+
+char stack[SIZE];
+int top = -1;
+
+void push(char c) { stack[++top] = c; }
+char pop() { return stack[top--]; }
+int precedence(char c) {
+    if (c == '+' || c == '-') return 1;
+    if (c == '*' || c == '/' || c == '%') return 2;
+    if (c == '^') return 3;
+    return 0;
+}
+
+void infixToPostfix(char* infix, char* postfix) {
+    int i = 0, k = 0;
+    push('#'); // Sentinel to avoid stack underflow
+
+    while (infix[i]) {
+        char ch = infix[i++];
+        if (isalnum(ch)) {
+            postfix[k++] = ch; // Add operands to output
+        } else if (ch == '(') {
+            push(ch);
+        } else if (ch == ')') {
+            while (stack[top] != '(') postfix[k++] = pop();
+            pop(); // Remove '('
+        } else { // Operators
+            while (precedence(stack[top]) >= precedence(ch)) postfix[k++] = pop();
+            push(ch);
+        }
+    }
+
+    while (stack[top] != '#') {
+        postfix[k++] = pop();
+    }
+    postfix[k] = '\0'; // Null-terminate the string
+}
+
+int main() {
+    char infix[SIZE], postfix[SIZE];
+    printf("Enter Infix Expression: ");
+    scanf("%s", infix);
+
+    infixToPostfix(infix, postfix);
+    printf("Postfix Expression: %s\n", postfix);
+
+    return 0;
+}
