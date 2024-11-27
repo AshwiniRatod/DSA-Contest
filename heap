@@ -1,0 +1,56 @@
+#include <stdio.h>
+
+#define MAX_SIZE 100
+
+void insert(int heap[], int *size, int value) {
+    int i = ++(*size);  // Increment the heap size and get the index for the new value
+    heap[i] = value;    // Place the value at the end of the heap
+
+    // Bubble up to restore the heap property
+    while (i > 1 && heap[i / 2] < heap[i]) {
+        int temp = heap[i];
+        heap[i] = heap[i / 2];
+        heap[i / 2] = temp;
+        i = i / 2;
+    }
+}
+
+void display(int heap[], int size) {
+    printf("Heap: ");
+    for (int i = 1; i <= size; i++) {
+        printf("%d ", heap[i]);
+    }
+    printf("\n");
+}
+
+int main() {
+    int heap[MAX_SIZE], size = 0, value, choice;
+
+    while (1) {
+        printf("\n1. Insert  2. Display  3. Exit\nChoose an option: ");
+        scanf("%d", &choice);
+
+        switch (choice) {
+            case 1:
+                printf("Enter value to insert: ");
+                scanf("%d", &value);
+                insert(heap, &size, value);
+                break;
+
+            case 2:
+                if (size == 0) {
+                    printf("Heap is empty\n");
+                } else {
+                    display(heap, size);
+                }
+                break;
+
+            case 3:
+                return 0;
+
+            default:
+                printf("Invalid choice. Try again.\n");
+        }
+    }
+    return 0;
+}
