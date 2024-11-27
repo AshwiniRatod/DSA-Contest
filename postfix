@@ -1,0 +1,44 @@
+postfix evalua
+#include <stdio.h>
+#include <string.h>
+#include <math.h>
+#define MAX 50
+
+int stack[MAX];
+char post[MAX];
+int top = -1;
+
+void pushstack(int value) {
+    stack[++top] = value; // Push value onto stack
+}
+
+void calculator(char operator) {
+    int a = stack[top--]; // Pop top element
+    int b = stack[top--]; // Pop next element
+    int result;
+
+    switch (operator) {
+        case '+': result = b + a; break;
+        case '-': result = b - a; break;
+        case '*': result = b * a; break;
+        case '/': result = b / a; break;
+        case '^': result = pow(b, a); break;
+    }
+    stack[++top] = result; // Push result onto stack
+}
+
+int main() {
+    printf("Insert a postfix expression: ");
+    scanf("%s", post);
+
+    for (int i = 0; i < strlen(post); i++) {
+        if (post[i] >= '0' && post[i] <= '9') {
+            pushstack(post[i] - '0'); // Convert char to integer
+        } else if (strchr("+-*/^", post[i])) {
+            calculator(post[i]); // Call calculator for operators
+        }
+    }
+
+    printf("\nResult: %d\n", stack[top]); // Final result on top of the stack
+    return 0;
+}
