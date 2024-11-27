@@ -1,0 +1,55 @@
+circular queue
+
+#include <stdio.h>
+#include <stdlib.h>
+#define SIZE 5
+
+void enqueue(int q[], int *f, int *r, int item) {
+    if ((*r + 1) % SIZE == *f) {
+        printf("Queue is full.\n");
+    } else {
+        if (*f == -1) *f = 0;
+        *r = (*r + 1) % SIZE;
+        q[*r] = item;
+    }
+}
+
+void dequeue(int q[], int *f, int *r) {
+    if (*f == -1) {
+        printf("Queue is empty.\n");
+    } else {
+        printf("Dequeued: %d\n", q[*f]);
+        *f = (*f == *r) ? (*f = *r = -1) : (*f + 1) % SIZE;
+    }
+}
+
+void display(int q[], int f, int r) {
+    if (f == -1) {
+        printf("Queue is empty.\n");
+    } else {
+        printf("Queue: ");
+        for (int i = f; ; i = (i + 1) % SIZE) {
+            printf("%d ", q[i]);
+            if (i == r) break;
+        }
+        printf("\n");
+    }
+}
+
+int main() {
+    int q[SIZE], f = -1, r = -1, item, ch;
+    do {
+        printf("\n1: Enqueue  2: Dequeue  3: Display  4: Exit\nChoice: ");
+        scanf("%d", &ch);
+        if (ch == 1) {
+            printf("Enter item: ");
+            scanf("%d", &item);
+            enqueue(q, &f, &r, item);
+        } else if (ch == 2) {
+            dequeue(q, &f, &r);
+        } else if (ch == 3) {
+            display(q, f, r);
+        }
+    } while (ch != 4);
+    return 0;
+}
